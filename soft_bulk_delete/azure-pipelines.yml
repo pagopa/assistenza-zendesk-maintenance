@@ -8,7 +8,7 @@ trigger:
     - main
   paths:
     include:
-    - '$(working-dir)/*'
+    - 'soft_bulk_delete/*'
 
 schedules:
 - cron: "0 0,6,12,18 * * *"
