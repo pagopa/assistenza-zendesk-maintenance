@@ -2,17 +2,15 @@ variables:
 - name: working-dir
   value: 'soft_bulk_delete/'
 
-trigger:
+schedules:
+- cron: "0 0,6,12,18 * * *"
+  displayName: Clean-up closed tickets at 0:00 AM, 6:00 AM, 12:00 PM, and 18:00 PM (UTC)
   branches:
     include:
     - main
   paths:
     include:
     - 'soft_bulk_delete/*'
-
-schedules:
-- cron: "0 0,6,12,18 * * *"
-  displayName: Clean-up closed tickets at 0:00 AM, 6:00 AM, 12:00 PM, and 18:00 PM (UTC)
   always: true
 
 pool:
