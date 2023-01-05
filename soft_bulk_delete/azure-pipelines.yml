@@ -1,6 +1,6 @@
 variables:
 - name: working-dir
-  value: 'soft_bulk_delete/'
+  value: 'soft_bulk_delete'
 
 schedules:
 - cron: "0 0,6,12,18 * * *"
@@ -28,6 +28,5 @@ steps:
     Z_USER: $(zendesk.user)
     Z_API_TOKEN: $(zendesk.token)
   inputs:
-    workingDirectory: $(working-dir)
     scriptSource: 'filePath'
-    scriptPath: 'soft_bulk_delete.py'
+    scriptPath: '$(working-dir)/soft_bulk_delete.py'
