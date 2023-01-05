@@ -8,9 +8,6 @@ schedules:
   branches:
     include:
     - main
-  paths:
-    include:
-    - 'soft_bulk_delete/*'
   always: true
 
 pool:
