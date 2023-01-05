@@ -11,13 +11,13 @@ variables:
   working-dir: 'sso'
 
   # Azure Resource Manager connection created during pipeline creation
-  azureServiceConnectionId: '703ad25b-32d3-40f4-a878-ffe9ee944269'
+  azureServiceConnectionId: $(azure.service-connection-id)
 
   # Resource group name
-  resourceGroupName: 'assi-d-zdsso-rg'
+  resourceGroupName: $(azure.resource-group-name)
   
   # Web app name
-  webAppName: 'assi-d-app-zdsso'
+  webAppName: $(azure.web-app-name)
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
