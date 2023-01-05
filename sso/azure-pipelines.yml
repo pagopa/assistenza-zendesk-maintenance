@@ -1,0 +1,92 @@
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - 'sso/*'
+
+variables:
+  # folder name of this sub-repository
+  working-dir: 'sso'
+
+  # Azure Resource Manager connection created during pipeline creation
+  azureServiceConnectionId: '703ad25b-32d3-40f4-a878-ffe9ee944269'
+
+  # Resource group name
+  resourceGroupName: 'assi-d-zdsso-rg'
+  
+  # Web app name
+  webAppName: 'assi-d-app-zdsso'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+  # Project root folder. Point to the folder containing manage.py file.
+  projectRoot: $(System.DefaultWorkingDirectory)/$(working-dir)
+
+  # Python version: 3.10
+  pythonVersion: '3.10'
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: BuildJob
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(pythonVersion)'
+      displayName: 'Use Python $(pythonVersion)'
+    
+    - script: |
+        python -m venv antenv
+        source antenv/bin/activate
+        python -m pip install --upgrade pip
+        pip install setup
+        pip install -r requirements.txt
+      workingDirectory: $(projectRoot)
+      displayName: "Install requirements"
+    
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
+      inputs:
+        rootFolderOrFile: '$(projectRoot)'
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        replaceExistingArchive: true    
+    
+    - publish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      displayName: 'Upload package'
+      artifact: drop
+
+- stage: Deploy
+  displayName: 'Deploy Web App'
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - job: DeploymentJob
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(pythonVersion)'
+      displayName: 'Use Python version'
+    
+    - download: current
+      artifact: drop
+
+    - task: AzureWebApp@1
+      inputs:
+        azureSubscription: $(azureServiceConnectionId)
+        resourceGroupName: $(resourceGroupName)
+        appType: 'webApp'
+        appName: $(webAppName)
+        package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+        deploymentMethod: 'auto'
+      displayName: 'Deploy Azure Web App'
