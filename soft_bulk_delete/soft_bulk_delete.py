@@ -8,12 +8,13 @@ def chunks(lst, n):
 
 ### ENTRY ###
 
+days_to_keep = 395 # 365+30 (one year + grace period)
 user = os.getenv('Z_USER')
 api_token = os.getenv('Z_API_TOKEN')
 
 # Build a query to find tickets CLOSED more than 1 year ago
 
-date_limit = datetime.datetime.now() - datetime.timedelta(days=360)
+date_limit = datetime.datetime.now() - datetime.timedelta(days=days_to_keep)
 date_limit_s = f"{date_limit:%Y-%m-%d}"
 search_params = {
     'query': 'type:ticket status:closed updated<' + date_limit_s,
