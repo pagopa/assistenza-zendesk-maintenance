@@ -13,7 +13,7 @@ def redirector():
         return redirect('https://partner.assistenza.pagopa.it/access/normal')
     else:
         print('SSO LOGIN: No brand specified or not supported')
-        return redirect('https://www.pagopa.it')
+        return redirect('https://www.pagopa.it/it/societa/di-cosa-ci-occupiamo')
 
 @app.route('/eplogout')
 def sso_logout():
