@@ -1,0 +1,38 @@
+variables:
+- name: working-dir
+  value: 'soft_bulk_delete/'
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - 'soft_bulk_delete/*'
+
+schedules:
+- cron: "0 0,6,12,18 * * *"
+  displayName: Clean-up closed tickets at 0:00 AM, 6:00 AM, 12:00 PM, and 18:00 PM (UTC)
+  always: true
+
+pool:
+  vmImage: ubuntu-latest
+strategy:
+  matrix:
+    Python37:
+      python.version: '3.7'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Use Python $(python.version)'
+
+- task: PythonScript@0
+  workingDirectory: $(working-dir)
+  env:
+    Z_USER: $(zendesk.user)
+    Z_API_TOKEN: $(zendesk.token)
+  inputs:
+    scriptSource: 'filePath'
+    scriptPath: 'soft_bulk_delete.py'
