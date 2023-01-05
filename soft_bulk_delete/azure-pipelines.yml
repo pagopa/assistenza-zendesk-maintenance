@@ -23,6 +23,9 @@ steps:
     versionSpec: '$(python.version)'
   displayName: 'Use Python $(python.version)'
 
+- script: python -m pip install --upgrade pip requests
+  displayName: 'Install dependencies'
+
 - task: PythonScript@0
   env:
     Z_USER: $(zendesk.user)
