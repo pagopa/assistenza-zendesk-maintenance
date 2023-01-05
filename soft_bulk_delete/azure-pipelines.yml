@@ -29,10 +29,10 @@ steps:
   displayName: 'Use Python $(python.version)'
 
 - task: PythonScript@0
-  workingDirectory: $(working-dir)
   env:
     Z_USER: $(zendesk.user)
     Z_API_TOKEN: $(zendesk.token)
   inputs:
+    workingDirectory: $(working-dir)
     scriptSource: 'filePath'
     scriptPath: 'soft_bulk_delete.py'
