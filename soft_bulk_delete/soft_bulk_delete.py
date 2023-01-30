@@ -8,7 +8,7 @@ def chunks(lst, n):
 
 ### ENTRY ###
 
-days_to_keep = 395 # 365+30 (one year + grace period)
+days_to_keep = 372 # 365+7 (one year + grace period)
 user = os.getenv('Z_USER')
 api_token = os.getenv('Z_API_TOKEN')
 
