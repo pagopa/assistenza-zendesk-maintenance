@@ -1,0 +1,43 @@
+variables:
+- name: working-dir
+  value: 'soft_bulk_delete_user'
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - 'soft_bulk_delete_user/*'
+
+schedules:
+- cron: "0 3 * * *"
+  displayName: Users clean-up at 3:00 AM (UTC)
+  branches:
+    include:
+    - main
+  always: true
+
+pool:
+  vmImage: ubuntu-latest
+strategy:
+  matrix:
+    Python37:
+      python.version: '3.7'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(python.version)'
+  displayName: 'Use Python $(python.version)'
+
+- script: python -m pip install --upgrade pip requests
+  displayName: 'Install dependencies'
+
+- task: PythonScript@0
+  env:
+    Z_USER: $(zendesk.user)
+    Z_API_TOKEN: $(zendesk.token)
+  inputs:
+    scriptSource: 'filePath'
+    scriptPath: '$(working-dir)/delete_new_daily_users.py'

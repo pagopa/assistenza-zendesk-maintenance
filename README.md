@@ -4,7 +4,11 @@ Contiene vari script e altro codice legato esclusivamente alle attività di manu
 
 ## soft_bulk_delete
 
-E' un semplice script Python schedulato 4 volte al giorno (0:00 AM, 6:00 AM, 12:00 PM, and 18:00 PM [UTC]) per la cancellazione dei ticket chiusi da oltre 1 anno (+ 1 mese di grace period)
+E' un semplice script Python schedulato 4 volte al giorno (0:00 AM, 6:00 AM, 12:00 PM, and 18:00 PM [UTC]) per la cancellazione dei ticket chiusi da oltre 365 giorni (+ 7 giorni di grace period).
+
+## soft_bulk_delete_user
+
+E' un semplice script Python schedulato 1 volta al giorno (3:00 AM [UTC]) per la cancellazione dei nuovi profili utente creati nella giornata precedente, ai quali non è associato nessun ticket.
 
 ## sso
 
