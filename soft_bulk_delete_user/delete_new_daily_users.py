@@ -1,8 +1,7 @@
-import time
+import os, requests, time
+
 from datetime import date, datetime, timedelta
 from urllib.parse import urlencode
-
-import requests
 
 
 def chunks(lst, n):
