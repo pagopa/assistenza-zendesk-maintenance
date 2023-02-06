@@ -25,27 +25,33 @@ strategy:
     Python37:
       python.version: '3.7'
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+jobs:
+- job: Cleanup Users
+  timeoutInMinutes: 0
+  
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+    displayName: 'Use Python $(python.version)'
 
-- script: python -m pip install --upgrade pip requests
-  displayName: 'Install dependencies'
+  - script: python -m pip install --upgrade pip requests
+    displayName: 'Install dependencies'
 
-- task: PythonScript@0
-  env:
-    Z_USER: $(zendesk.user)
-    Z_API_TOKEN: $(zendesk.token)
-  inputs:
-    scriptSource: 'filePath'
-    scriptPath: '$(working-dir)/delete_new_daily_users.py'
+  - task: PythonScript@0
+    displayName: Delete RECENT users without a ticket
+    env:
+      Z_USER: $(zendesk.user)
+      Z_API_TOKEN: $(zendesk.token)
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: '$(working-dir)/delete_new_daily_users.py'
 
-- task: PythonScript@0
-  env:
-    Z_USER: $(zendesk.user)
-    Z_API_TOKEN: $(zendesk.token)
-  inputs:
-    scriptSource: 'filePath'
-    scriptPath: '$(working-dir)/delete_old_users.py'
+  - task: PythonScript@0
+    displayName: Delete OLD users without a ticket
+    env:
+      Z_USER: $(zendesk.user)
+      Z_API_TOKEN: $(zendesk.token)
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: '$(working-dir)/delete_old_users.py'
