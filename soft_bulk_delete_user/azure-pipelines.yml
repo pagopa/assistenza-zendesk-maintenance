@@ -19,7 +19,7 @@ schedules:
   always: true
 
 jobs:
-- job: Cleanup Users
+- job: cleanupUsers
   timeoutInMinutes: 0
   pool:
     vmImage: ubuntu-latest
