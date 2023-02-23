@@ -35,7 +35,7 @@ end_date = date(today.year, today.month, today.day) - timedelta(365 + 30)
 end_date_str = end_date.strftime("%Y-%m-%d")
 search_params = {
     "role": "end-user",
-    "query": "-tags:referente_tecnico -tags:operatore_tecnico -tags:acq_referente_tecnico -tags:acq_operatore_tecnico created<"
+    "query": "-tags:referente_tecnico -tags:operatore_tecnico -tags:acq_referente_tecnico -tags:acq_operatore_tecnico -tags:created_for_side_conversation created<"
     + end_date_str,
     "sort_by": "updated_at",
     "sort_order": "asc",
