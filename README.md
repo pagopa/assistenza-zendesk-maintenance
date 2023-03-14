@@ -8,7 +8,7 @@ Un unico script Python schedulato 4 volte al giorno (0:00 AM, 6:00 AM, 12:00 PM,
 
 ## soft_bulk_delete_user
 
-Una collezione di script Python schedulati almeno una 1 volta al giorno (eg. 3:00 AM [UTC]) per la cancellazione: (a) dei nuovi profili utente creati nella giornata precedente, ai quali non è associato alcun ticket; (b) dei profili utente creati oltre 13 mesi addietro, ai quali non è associato alcun ticket.
+Una collezione di script Python schedulati almeno una 1 volta al giorno (eg. 1:00 AM [UTC]) per la cancellazione: (a) dei nuovi profili utente creati nella giornata precedente, ai quali non è associato alcun ticket; (b) dei profili utente creati oltre 13 mesi addietro, ai quali non è associato alcun ticket.
 
 ## sso
 
