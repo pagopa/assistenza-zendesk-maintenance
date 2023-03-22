@@ -9,7 +9,6 @@ BRAND_ID_SELFCARE = '9379749838865'
 @app.route('/eplogin')
 def redirector():
     brand_id = request.args.get('brand_id')
-    print(request.args)
     if brand_id == BRAND_ID_PARTNER:
         # Portale Partner (skip SSO -> ZD native auth.)
         return redirect('https://partner.assistenza.pagopa.it/access/normal')
