@@ -11,8 +11,8 @@ trigger:
     - 'soft_bulk_delete_user/*'
 
 schedules:
-- cron: "0 21 * * *"
-  displayName: Users clean-up at 9:00 PM (UTC)
+- cron: "15 0 * * *"
+  displayName: Users clean-up at 0:15 AM (UTC)
   branches:
     include:
     - main
