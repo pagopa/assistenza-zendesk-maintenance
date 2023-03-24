@@ -24,12 +24,18 @@ def check_rate_limit():
 # ENTRY #
 #########
 
+# run this script on even days of the week only
+today = datetime.today()
+today_n = today.isoweekday()
+if today_n == 1:
+    print("Weekday number is odd: skipping old users maintenance")
+    exit(0)
+
 user = os.getenv("Z_USER")
 api_token = os.getenv("Z_API_TOKEN")
 print("START TIME: " + str(datetime.now()))
 
 # Work Date Range = (0, 13 months ago)
-today = datetime.today()
 end_date = date(today.year, today.month, today.day) - timedelta(365 + 30)
 
 end_date_str = end_date.strftime("%Y-%m-%d")
