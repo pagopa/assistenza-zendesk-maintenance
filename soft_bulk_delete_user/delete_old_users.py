@@ -27,6 +27,7 @@ def check_rate_limit():
 # run this script on even days of the week only
 today = datetime.today()
 today_n = today.isoweekday()
+print("Weekday: " + str(today_n))
 if today_n == 1:
     print("Weekday number is odd: skipping old users maintenance")
     exit(0)
