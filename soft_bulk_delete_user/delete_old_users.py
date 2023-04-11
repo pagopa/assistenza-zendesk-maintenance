@@ -1,6 +1,6 @@
 import os
 import time
-from datetime import date, datetime, timedelta
+from datetime import datetime
 from urllib.parse import urlencode
 
 import requests
@@ -19,38 +19,60 @@ def check_rate_limit():
         time.sleep(60)
         rate_limit_count = 0
 
+def get_monthly_timeframe(month):
+    match month:
+        case 1:
+            return "created<=2022-01-31"
+        case 2:
+            return "created<=2022-02-28 created>=2022-02-01"
+        case 3:
+            return "created<=2022-03-31 created>=2022-03-01"
+        case 4:
+            return "created<=2022-04-30 created>=2022-04-01"
+        case 5:
+            return "created<=2022-05-31 created>=2022-05-01"
+        case 6:
+            return "created<=2022-06-30 created>=2022-06-01"
+        case 7:
+            return "created<=2022-07-31 created>=2022-07-01"
+        case 8:
+            return "created<=2022-08-31 created>=2022-08-01"
+        case 9:
+            return "created<=2022-09-30 created>=2022-09-01"
+        case 10:
+            return "created<=2022-10-31 created>=2022-10-01"
+        case 11:
+            return "created<=2022-11-30 created>=2022-11-01"
+        case 12:
+            return "created<=2022-12-31 created>=2022-12-01"
+        case _:
+            return "created>=2023-01-01"
 
 #########
 # ENTRY #
 #########
 
-# run this script on even days of the week only
-today = datetime.today()
-today_n = today.isoweekday()
-if today_n % 2 == 1:
-    print("Weekday number is odd: skipping old users maintenance")
-    exit(0)
-
 user = os.getenv("Z_USER")
 api_token = os.getenv("Z_API_TOKEN")
 print("START TIME: " + str(datetime.now()))
 
-# Work Date Range = (0, 13 months ago)
-end_date = date(today.year, today.month, today.day) - timedelta(365 + 30)
-
-end_date_str = end_date.strftime("%Y-%m-%d")
+# build query for one single month, based on the current day
+month_n = (datetime.today().day % 12) + 1
+timeframe = get_monthly_timeframe(month_n)
 search_params = {
     "role": "end-user",
-    "query": "-tags:referente_tecnico -tags:operatore_tecnico -tags:acq_referente_tecnico -tags:acq_operatore_tecnico -tags:created_for_side_conversation created<"
-    + end_date_str,
+    "query": "-tags:referente_tecnico -tags:operatore_tecnico -tags:acq_referente_tecnico -tags:acq_operatore_tecnico -tags:created_for_side_conversation "
+    + timeframe,
     "sort_by": "updated_at",
     "sort_order": "asc",
 }
 search_url = "https://pagopa.zendesk.com/api/v2/users.json?" + urlencode(
     search_params
 )
+print("Selected month: " + str(month_n))
+print("Working on timeframe: " + timeframe)
 
-# STAGE 1: collect users created 13 months ago or earlier
+# STAGE 1: collect monthly generated users
 
 user_ids = []
 while search_url:
@@ -70,7 +92,7 @@ while search_url:
         user_ids.append(result["id"])
     search_url = data["next_page"]
 
-print("# Users created before " + end_date_str + ": " + str(data["count"]))
+print("# Users created: " + str(data["count"]))
 
 # STAGE 2: narrow-down to users without a ticket
 
