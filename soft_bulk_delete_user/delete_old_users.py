@@ -104,21 +104,20 @@ for user_id in user_ids:
         + str(user_id)
         + "/related.json"
     )
-    response = requests.get(show_user_related_url, auth=(user, api_token))
-    if response.status_code != 200:
-        print(
-            "ERROR: status_code = "
-            + str(response.status_code)
-            + " Reason: "
-            + response.reason
-        )
-        exit(1)
 
-    data = response.json()
-    requested_tickets = data["user_related"]["requested_tickets"]
-    if requested_tickets == 0:
-        user_ids_selected.append(user_id)
-        print(user_id, end=" ")
+    for attempt_no in range(3):
+        try:
+            response = requests.get(show_user_related_url, auth=(user, api_token))
+            data = response.json()
+            requested_tickets = data["user_related"]["requested_tickets"]
+            if requested_tickets == 0:
+                user_ids_selected.append(user_id)
+                print(user_id, end=" ")
+            break
+        except Exception as e:
+            print(e)
+            print("\nWait for 10 minutes and retry...\n")
+            time.sleep(600)
 
 print("\n# To be deleted: " + str(len(user_ids_selected)))
 
