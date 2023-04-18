@@ -56,8 +56,9 @@ user = os.getenv("Z_USER")
 api_token = os.getenv("Z_API_TOKEN")
 print("START TIME: " + str(datetime.now()))
 
-# build query for one single month, based on the current day
-month_n = (datetime.today().day % 12) + 1
+# build query for a single month of 2022; each month is selected by cycling in interval [1, current month]
+# example: running on 2023 April 5, the selected month is (5 MOD 4) + 1 = 2 (February)
+month_n = (datetime.today().day % datetime.today().month) + 1
 timeframe = get_monthly_timeframe(month_n)
 search_params = {
     "role": "end-user",
