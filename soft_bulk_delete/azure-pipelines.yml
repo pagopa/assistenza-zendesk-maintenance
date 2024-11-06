@@ -1,43 +1,43 @@
 variables:
-- name: working-dir
-  value: 'soft_bulk_delete'
+  - name: working-dir
+    value: "soft_bulk_delete"
 
 trigger:
   branches:
     include:
-    - main
+      - main
   paths:
     include:
-    - 'soft_bulk_delete/*'
+      - "soft_bulk_delete/*"
 
 schedules:
-- cron: "0 0,6,12,18 * * *"
-  displayName: Clean-up closed tickets at 0:00 AM, 6:00 AM, 12:00 PM, and 18:00 PM (UTC)
-  branches:
-    include:
-    - main
-  always: true
+  - cron: "0 0,6,12,18 * * *"
+    displayName: Clean-up closed tickets at 0:00 AM, 6:00 AM, 12:00 PM, and 18:00 PM (UTC)
+    branches:
+      include:
+        - main
+    always: false
 
 pool:
   vmImage: ubuntu-latest
 strategy:
   matrix:
     Python310:
-      python.version: '3.10'
+      python.version: "3.10"
 
 steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: "$(python.version)"
+    displayName: "Use Python $(python.version)"
 
-- script: python -m pip install --upgrade pip requests
-  displayName: 'Install dependencies'
+  - script: python -m pip install --upgrade pip requests
+    displayName: "Install dependencies"
 
-- task: PythonScript@0
-  env:
-    Z_USER: $(zendesk.user)
-    Z_API_TOKEN: $(zendesk.token)
-  inputs:
-    scriptSource: 'filePath'
-    scriptPath: '$(working-dir)/soft_bulk_delete.py'
+  - task: PythonScript@0
+    env:
+      Z_USER: $(zendesk.user)
+      Z_API_TOKEN: $(zendesk.token)
+    inputs:
+      scriptSource: "filePath"
+      scriptPath: "$(working-dir)/soft_bulk_delete.py"
