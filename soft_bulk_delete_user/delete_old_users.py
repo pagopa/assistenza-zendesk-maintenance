@@ -5,6 +5,29 @@ from urllib.parse import urlencode
 
 import requests
 
+USER = os.getenv("Z_USER")
+API_TOKEN = os.getenv("Z_API_TOKEN")
+
+
+def make_request(url: str):
+    response = requests.get(url, auth=(USER, API_TOKEN))
+    if response.status_code != 200:
+        print("ERROR: status_code = " + str(response.status_code) + " " + response.text)
+        exit(1)
+    return response.json()
+
+
+def make_delete_request(url: str):
+    response = requests.delete(url, auth=(USER, API_TOKEN))
+    if response.status_code == 429:
+        print("\nToo Many Requests! Wait for 10 minutes and retry...\n")
+        time.sleep(600)
+        response = requests.delete(url, auth=(USER, API_TOKEN))
+    elif response.status_code != 200:
+        print("ERROR: status_code = " + str(response.status_code) + " " + response.text)
+        exit(1)
+    return response.json()
+
 
 def chunks(lst, n):
     # Yield successive n-sized chunks from lst
@@ -12,12 +35,24 @@ def chunks(lst, n):
         yield lst[i : i + n]
 
 
-def check_rate_limit():
-    global rate_limit_count
-    if rate_limit_count == 30:
-        print("!!! reached rate limit --> wait for 1 minute...")
+def check_search_rate_limit():
+    global search_rate_limit_count
+    if search_rate_limit_count == 100:
+        print(
+            "!!! reached search rate limit (100 requests per minute) --> delaying 60s..."
+        )
         time.sleep(60)
-        rate_limit_count = 0
+        search_rate_limit_count = 0
+
+
+def check_job_rate_limit():
+    global job_rate_limit_count
+    if job_rate_limit_count == 30:
+        print(
+            "!!! reached job rate limit (30 queued/running jobs at once) --> delaying 60s..."
+        )
+        time.sleep(60)
+        job_rate_limit_count = 0
 
 
 def get_monthly_timeframe(month):
@@ -78,8 +113,6 @@ def get_monthly_timeframe(month):
 # ENTRY #
 #########
 
-user = os.getenv("Z_USER")
-api_token = os.getenv("Z_API_TOKEN")
 print("START TIME: " + str(datetime.now()))
 
 # build the query with a timeframe limited to a single month of years 2022 & 2023;
@@ -93,36 +126,42 @@ if month_n > 12:
 
 timeframe = get_monthly_timeframe(month_n)
 search_params = {
-    "role": "end-user",
-    "query": "-tags:referente_tecnico -tags:operatore_tecnico -tags:acq_referente_tecnico -tags:acq_operatore_tecnico -tags:created_for_side_conversation "
+    "query": "role:end-user -tags:referente_tecnico -tags:operatore_tecnico -tags:acq_referente_tecnico -tags:acq_operatore_tecnico -tags:created_for_side_conversation "
     + timeframe,
-    "sort_by": "updated_at",
-    "sort_order": "asc",
+    "page[size]": 100,
+    "filter[type]": "user",
 }
-search_url = "https://pagopa.zendesk.com/api/v2/users.json?" + urlencode(search_params)
+search_url = "https://pagopa.zendesk.com/api/v2/search/export.json?" + urlencode(
+    search_params
+)
 print("Selected month: " + str(month_n))
 print("Working on timeframe: " + timeframe)
 
 # STAGE 1: collect monthly generated users
 
+# Fetch the initial page of data
+data = make_request(search_url)
+
+results_count = 0
+search_rate_limit_count = 0
 user_ids = []
+
 while search_url:
-    response = requests.get(search_url, auth=(user, api_token))
-    if response.status_code != 200:
-        print(
-            "ERROR: status_code = "
-            + str(response.status_code)
-            + " Reason: "
-            + response.reason
-        )
-        exit(1)
+    results_count += len(data["results"])
+    print("Collecting search results... " + str(results_count))
 
-    data = response.json()
-    for result in data["users"]:
-        user_ids.append(result["id"])
-    search_url = data["next_page"]
+    for user in data["results"]:
+        user_ids.append(user["id"])
 
-print("# Users created: " + str(data["count"]))
+    if data["meta"]["has_more"]:
+        search_url = data["links"]["next"]
+        check_search_rate_limit()
+        data = make_request(search_url)
+        search_rate_limit_count += 1
+    else:
+        search_url = ""
+
+print("# Users created: " + str(results_count))
 
 # STAGE 2: narrow-down to users without a ticket
 
@@ -134,8 +173,7 @@ for user_id in user_ids:
 
     for attempt_no in range(3):
         try:
-            response = requests.get(show_user_related_url, auth=(user, api_token))
-            data = response.json()
+            data = make_request(show_user_related_url)
             requested_tickets = data["user_related"]["requested_tickets"]
             if requested_tickets == 0:
                 user_ids_selected.append(user_id)
@@ -150,9 +188,11 @@ print("\n# To be deleted: " + str(len(user_ids_selected)))
 
 # STAGE 3: bulk delete
 
-rate_limit_count = 0
+job_rate_limit_count = 0
 for users in list(chunks(user_ids_selected, 100)):
-    check_rate_limit()
+
+    check_job_rate_limit()
+
     users_str = [str(item) for item in users]
     current_chunk = ",".join(users_str)
     soft_destroy_params = {"ids": current_chunk}
@@ -160,23 +200,9 @@ for users in list(chunks(user_ids_selected, 100)):
         "https://pagopa.zendesk.com/api/v2/users/destroy_many.json?"
         + urlencode(soft_destroy_params)
     )
-    response = requests.delete(soft_destroy_url, auth=(user, api_token))
 
-    if response.status_code == 429:
-        print("\nToo Many Requests! Wait for 10 minutes and retry...\n")
-        time.sleep(600)
-        response = requests.delete(soft_destroy_url, auth=(user, api_token))
-    elif response.status_code != 200:
-        print(
-            "ERROR: status_code = "
-            + str(response.status_code)
-            + " Reason: "
-            + response.reason
-        )
-        exit(1)
-
-    data = response.json()
+    data = make_delete_request(soft_destroy_url)
     print(" " + data["job_status"]["url"])
-    rate_limit_count += 1
+    job_rate_limit_count += 1
 
 print("END TIME: " + str(datetime.now()))
