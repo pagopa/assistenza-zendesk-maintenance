@@ -22,9 +22,9 @@ def redirector():
         return redirect("https://selfcare.pagopa.it")
     elif brand_id == BRAND_ID_APPIO:
         return redirect("https://www.pagopa.it/it/prodotti-e-servizi/app-io")
-    else:
+    """ else:
         print("SSO LOGIN: No brand specified or not supported")
-        return redirect("https://www.pagopa.it/it/societa/di-cosa-ci-occupiamo")
+        return redirect("https://www.pagopa.it/it/societa/di-cosa-ci-occupiamo") """
 
 
 @app.route("/eplogout")
