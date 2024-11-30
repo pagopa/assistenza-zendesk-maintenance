@@ -39,9 +39,10 @@ def check_search_rate_limit():
     global search_rate_limit_count
     if search_rate_limit_count == 100:
         print(
-            "!!! reached search rate limit (100 requests per minute) --> delaying 60s..."
+            "!!! reached search rate limit (10000 requests per minute) --> delaying 300s..."
         )
-        time.sleep(60)
+        # According to Zendesk docs, 60 seconds should be enough, even if we wait for 5 mins...
+        time.sleep(300)
         search_rate_limit_count = 0
 
 
@@ -82,7 +83,7 @@ search_url = "https://pagopa.zendesk.com/api/v2/search/export.json?" + urlencode
 data = make_request(search_url)
 
 results_count = 0
-search_rate_limit_count = 0
+search_rate_limit_count = 1
 user_ids = []
 
 while search_url:
