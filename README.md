@@ -10,6 +10,6 @@ Un unico script Python schedulato 4 volte al giorno (0:00 AM, 6:00 AM, 12:00 PM,
 
 Una collezione di script Python schedulati almeno una 1 volta al giorno (eg. 1:00 AM [UTC]) per la cancellazione: (a) dei nuovi profili utente creati nella giornata precedente, ai quali non è associato alcun ticket; (b) dei profili utente creati oltre 13 mesi addietro, ai quali non è associato alcun ticket.
 
-## sso
+## sso (DEPRECATED)
 
 Una WebApp che funge da endpoint per intercettare gli accessi di utenti non ancora autenticati ai vari Help Center di PagoPA. L'unico scopo di questa app è quello di redirezionare l'utente sulle homepage delle varie iniziative, in base alla URL su cui si è tentato di atterrare.

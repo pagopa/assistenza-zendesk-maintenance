@@ -127,8 +127,7 @@ if month_n > 12:
 
 timeframe = get_monthly_timeframe(month_n)
 search_params = {
-    "query": "role:end-user -tags:referente_tecnico -tags:operatore_tecnico -tags:acq_referente_tecnico -tags:acq_operatore_tecnico -tags:created_for_side_conversation "
-    + timeframe,
+    "query": "role:end-user -tags:created_for_side_conversation " + timeframe,
     "page[size]": 100,
     "filter[type]": "user",
 }

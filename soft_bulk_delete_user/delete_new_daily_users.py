@@ -68,7 +68,7 @@ working_date = date(today.year, today.month, today.day) - timedelta(1)
 working_date_str = working_date.strftime("%Y-%m-%d")
 
 search_params = {
-    "query": "role:end-user -tags:referente_tecnico -tags:operatore_tecnico -tags:acq_referente_tecnico -tags:acq_operatore_tecnico -tags:created_for_side_conversation created:"
+    "query": "role:end-user -tags:created_for_side_conversation created:"
     + working_date_str,
     "page[size]": 100,
     "filter[type]": "user",
