@@ -59,55 +59,66 @@ def check_job_rate_limit():
 def get_monthly_timeframe(month):
     match month:
         case 1:
-            return "created<=2022-01-31"
+            return "created<=2022-02-28"
         case 2:
-            return "created<=2022-02-28 created>=2022-02-01"
+            return "created<=2022-04-30 created>=2022-03-01"
         case 3:
-            return "created<=2022-03-31 created>=2022-03-01"
+            return "created<=2022-06-30 created>=2022-05-01"
         case 4:
-            return "created<=2022-04-30 created>=2022-04-01"
+            return "created<=2022-08-31 created>=2022-07-01"
         case 5:
-            return "created<=2022-05-31 created>=2022-05-01"
+            return "created<=2022-10-31 created>=2022-09-01"
         case 6:
-            return "created<=2022-06-30 created>=2022-06-01"
+            return "created<=2022-12-31 created>=2022-11-01"
         case 7:
-            return "created<=2022-07-31 created>=2022-07-01"
-        case 8:
-            return "created<=2022-08-31 created>=2022-08-01"
-        case 9:
-            return "created<=2022-09-30 created>=2022-09-01"
-        case 10:
-            return "created<=2022-10-31 created>=2022-10-01"
-        case 11:
-            return "created<=2022-11-30 created>=2022-11-01"
-        case 12:
-            return "created<=2022-12-31 created>=2022-12-01"
-        case 13:
             return "created<=2023-01-31 created>=2023-01-01"
-        case 14:
+        case 8:
             return "created<=2023-02-28 created>=2023-02-01"
-        case 15:
+        case 9:
             return "created<=2023-03-31 created>=2023-03-01"
-        case 16:
+        case 10:
             return "created<=2023-04-30 created>=2023-04-01"
-        case 17:
+        case 11:
             return "created<=2023-05-31 created>=2023-05-01"
-        case 18:
+        case 12:
             return "created<=2023-06-30 created>=2023-06-01"
-        case 19:
+        case 13:
             return "created<=2023-07-31 created>=2023-07-01"
-        case 20:
+        case 14:
             return "created<=2023-08-31 created>=2023-08-01"
-        case 21:
+        case 15:
             return "created<=2023-09-30 created>=2023-09-01"
-        case 22:
+        case 16:
             return "created<=2023-10-31 created>=2023-10-01"
-        case 23:
+        case 17:
             return "created<=2023-11-30 created>=2023-11-01"
-        case 24:
+        case 18:
             return "created<=2023-12-31 created>=2023-12-01"
-        case _:
-            return "created>=2024-01-01"
+        case 19:
+            return "created<=2024-01-31 created>=2024-01-01"
+        case 20:
+            return "created<=2024-02-29 created>=2024-02-01"
+        case 21:
+            return "created<=2024-03-31 created>=2024-03-01"
+        case 22:
+            return "created<=2024-04-30 created>=2024-04-01"
+        case 23:
+            return "created<=2024-05-31 created>=2024-05-01"
+        case 24:
+            return "created<=2024-06-30 created>=2024-06-01"
+        case 25:
+            return "created<=2024-07-31 created>=2024-07-01"
+        case 26:
+            return "created<=2024-08-31 created>=2024-08-01"
+        case 27:
+            return "created<=2024-09-30 created>=2024-09-01"
+        case 28:
+            return "created<=2024-10-31 created>=2024-10-01"
+        case 29:
+            return "created<=2024-11-30 created>=2024-11-01"
+        case 30:
+            # This timeframe will be unreachable until Jan 2026!
+            return "created<=2024-12-31 created>=2024-12-01"
 
 
 #########
@@ -116,14 +127,14 @@ def get_monthly_timeframe(month):
 
 print("START TIME: " + str(datetime.now()))
 
-# build the query with a timeframe limited to a single month of years 2022 & 2023;
-#  since we're running this in 2024, we can select every month of 2022, at each run
-#  for 2023: each month is selected by cycling into the interval [1, current month]
-month_n = (datetime.today().day % 24) + 1
+# build the query with a timeframe spanning two-by-two months in 2022, or
+#  month-by-month in 2023; for 2024, each month is selected by cycling into
+#  the interval [1, current month-1]
+month_n = datetime.today().day
 
-if month_n > 12:
-    month_n_limiter = (month_n % datetime.today().month) + 1
-    month_n = 12 + month_n_limiter
+if month_n > 18:
+    month_n_limiter = month_n % datetime.today().month
+    month_n = 18 + month_n_limiter
 
 timeframe = get_monthly_timeframe(month_n)
 search_params = {
