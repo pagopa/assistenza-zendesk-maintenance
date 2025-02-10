@@ -2,6 +2,10 @@
 
 Contiene vari script e altro codice legato esclusivamente alle attività di manutenzione della piattaforma Zendesk o funzioni di supporto alla stessa. Il repository, pur essendo singolo, è stato pensato per ospitare pipeline multiple su Azure DevOps.
 
+## sync_user_displayname
+
+Uno script python schedulato 1 volta al giorno (0:15 AM [UTC]) per l'allineamento delle etichette degli utenti finali (display names) con la porzione sinistra delle rispettive email. Il display name originario viene preservato solo se il similarity score (tra display name attuale e email) supera il 70%.
+
 ## soft_bulk_delete (DEPRECATED)
 
 Un unico script Python schedulato 4 volte al giorno (0:00 AM, 6:00 AM, 12:00 PM, and 18:00 PM [UTC]) per la cancellazione dei ticket chiusi da oltre 365 giorni. La schedulazione di questo job è stata disattivata in data 6-nov-2024 per sostituzione con analoga funzionalità offerta direttamente dalla piattaforma Zendesk.
