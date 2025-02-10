@@ -2,21 +2,21 @@ variables:
 - name: working-dir
   value: 'soft_bulk_delete_user'
 
-trigger:
-  branches:
-    include:
-    - main
-  paths:
-    include:
-    - 'soft_bulk_delete_user/*'
+#trigger:
+#  branches:
+#    include:
+#    - main
+#  paths:
+#    include:
+#    - 'soft_bulk_delete_user/*'
 
-schedules:
-- cron: "15 0 * * *"
-  displayName: Users clean-up at 0:15 AM (UTC)
-  branches:
-    include:
-    - main
-  always: true
+#schedules:
+#- cron: "15 0 * * *"
+#  displayName: Users clean-up at 0:15 AM (UTC)
+#  branches:
+#    include:
+#    - main
+#  always: true
 
 jobs:
 - job: cleanupUsers
