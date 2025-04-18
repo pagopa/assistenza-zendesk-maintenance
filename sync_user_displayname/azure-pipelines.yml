@@ -53,3 +53,12 @@ jobs:
     inputs:
       scriptSource: 'filePath'
       scriptPath: '$(working-dir)/sync_send.py'
+
+  - task: PythonScript@0
+    displayName: Sanitize users aux data
+    env:
+      Z_USER: $(zendesk.user)
+      Z_API_TOKEN: $(zendesk.token)
+    inputs:
+      scriptSource: "filePath"
+      scriptPath: "$(working-dir)/cleanup_users_auxdata.py"
