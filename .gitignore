@@ -3,8 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 .DS_Store
-*.sh
 pagopa512x512.icns
+as-dynapp.zip
 
 # C extensions
 *.so

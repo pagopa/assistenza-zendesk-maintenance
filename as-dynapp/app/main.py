@@ -228,4 +228,5 @@ def main(project_base_path):
 
 
 if __name__ == "__main__":
-    main()
+    # this is just for running without an external launcher
+    main(os.path.dirname(os.path.realpath(__file__)))
