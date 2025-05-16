@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 .DS_Store
 *.sh
+pagopa512x512.icns
 
 # C extensions
 *.so

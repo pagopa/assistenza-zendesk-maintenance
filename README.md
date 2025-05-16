@@ -1,6 +1,12 @@
 # assistenza-zendesk-maintenance
 
-Contiene vari script e altro codice legato esclusivamente alle attività di manutenzione della piattaforma Zendesk o funzioni di supporto alla stessa. Il repository, pur essendo singolo, è stato pensato per ospitare pipeline multiple su Azure DevOps.
+Contiene vari script e altro codice legato esclusivamente alle attività di manutenzione della piattaforma Zendesk o funzioni di supporto alla stessa messe a disposizione del team di Assistenza & Operations. Pur essendo mono-repo, questo è stato inizialmente pensato per ospitare pipeline multiple su Azure DevOps per i diversi source-tree indipendenti.
+
+## as-dynapp
+
+Applicazione Python con GUI frontend (Tkinter) da eseguirsi localmente allo scopo di fornire utility al team (ie. strumenti di interrogazione della piattaforma Zendesk). Viene corredata con un "launcher" che sfrutta il dynamic bootstrap loading di Python per caricare dinamicamente l'ultima versione dell'applicativo direttamente dalla release Github di questo repo. L'idea alla base di questo progetto è quella di non seguire l'approccio webapp che obbligherebbe all'uso di tecnologie cloud e sviluppo frontend tipo React, ma piuttosto sfruttando la potenza di calcolo locale in maniera simile a quanto avveniva un tempo con le applet Java.
+
+NOTA - Il modulo launcher.py non fa parte dell'applicazione distribuita dinamicamente a run-time, ma viene compilato e impacchettato tramite Pyinstaller, su piattaforma arm64/macOS, in modo tale da poter essere installato just-one-time dai membri del team.
 
 ## sync_user_displayname
 
