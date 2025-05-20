@@ -3,8 +3,9 @@
 import os
 from datetime import datetime, timedelta
 
-APP_NAME = "SideConv2csv"
-APP_VERSION = "(v2.1 build 0045)"
+APP_NAME = "AS-DynApp"
+BUILD_NUMBER = "0045"
+APP_VERSION = "2.1"
 EMPTY = "N/A"
 READY = "--------------------------\nREADY"
 DONE_MESSAGE = f'\nESTRAZIONE COMPLETATA! Il file CSV è stato salvato nella cartella "ZD_script_reports" del tuo desktop.\n{READY}\n'

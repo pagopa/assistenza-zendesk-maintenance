@@ -7,6 +7,7 @@ from tkinter import PhotoImage, messagebox, ttk
 from constants import (
     APP_NAME,
     APP_VERSION,
+    BUILD_NUMBER,
     LABELS_GROUP,
     LABELS_TAG,
     LABELS_TIMERANGE,
@@ -23,8 +24,7 @@ from ZDExtractor import ZDExtractor
 
 
 class App:
-    def __init__(self, project_base_path):
-        self.project_base_path = project_base_path
+    def __init__(self):
         self.root = tk.Tk()
 
         # Drop-down menus
@@ -118,9 +118,11 @@ class App:
         self.root.after(1000, self.sync_output)  # next check in 1s
 
     def start(self):
+        base_path = os.path.dirname(os.path.abspath(__file__))
+
         # Setup root window
-        self.root.title(f"{APP_NAME} {APP_VERSION}")
-        icon_path = os.path.join(self.project_base_path, "pagopa.png")
+        self.root.title(f"{APP_NAME} {APP_VERSION} build {BUILD_NUMBER}")
+        icon_path = os.path.join(base_path, "pagopa.png")
         icon = PhotoImage(file=icon_path)
         self.root.iconphoto(True, icon)
         self.root.resizable(False, False)
@@ -145,7 +147,7 @@ class App:
         # Title
         title = tk.Label(
             main_frame,
-            text="ZD Estrattore Conversazioni Laterali",
+            text="ZD Estrazione Contatti Conversazioni Laterali",
             font=("Helvetica", 20, "bold"),
         )
         title.pack()
@@ -153,7 +155,7 @@ class App:
         # Subtitle
         subtitle = tk.Label(
             main_frame,
-            text="Generazione file CSV delle conversazioni laterali email, secondo i filtri impostati",
+            text="Generazione file CSV dei contatti email risultanti dai filtri impostati",
             font=("Helvetica", 12),
         )
         subtitle.pack()
@@ -195,7 +197,7 @@ class App:
 
         # ----- Retrieve/Set credentials for Zendesk -----
         cm = CredentialManager()
-        print(f"{APP_NAME} {APP_VERSION}\n")
+        print(f"{APP_NAME} {APP_VERSION} build {BUILD_NUMBER}\n")
         try:
             creds = cm.get_credentials()
             bearer = creds["password"]
@@ -222,11 +224,10 @@ class App:
         self.root.mainloop()
 
 
-def main(project_base_path):
-    app = App(project_base_path)
+def main():
+    app = App()
     app.start()
 
 
 if __name__ == "__main__":
-    # this is just for running without an external launcher
-    main(os.path.dirname(os.path.realpath(__file__)))
+    main()
