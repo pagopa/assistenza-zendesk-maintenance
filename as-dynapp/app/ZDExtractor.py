@@ -6,9 +6,8 @@ from datetime import datetime, timezone
 from urllib.parse import urlencode
 
 import requests
-from requests import RequestException
-
 from constants import CSV_TARGET_DIR, DONE_MESSAGE, EMPTY, GROUPS_MAP
+from requests import RequestException
 
 
 class ZDExtractor:
@@ -18,6 +17,9 @@ class ZDExtractor:
         self.end_task_callback = end_task_callback
         self.rate_limit_count = 0
         self.csv_writer = None
+
+    def set_bearer(self, zd_bearer):
+        self.zd_bearer = zd_bearer
 
     def check_rate_limit(self):
         if self.rate_limit_count == 100:
