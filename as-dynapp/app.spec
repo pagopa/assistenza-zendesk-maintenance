@@ -51,9 +51,9 @@ app = BUNDLE(
     info_plist={
         'CFBundleName': 'AS-DynApp',
         'CFBundleDisplayName': 'AS-DynApp',
-        'CFBundleGetInfoString': 'AS-DynApp 2.1.0045',
-        'CFBundleShortVersionString': '2.1.0045',
-        'CFBundleVersion': '2.1.0045',
+        'CFBundleGetInfoString': 'AS-DynApp 2.1.0047',
+        'CFBundleShortVersionString': '2.1.0047',
+        'CFBundleVersion': '2.1.0047',
         'CFBundleIdentifier': 'it.pagopa.assistenza.as-dynapp',
     }
 )

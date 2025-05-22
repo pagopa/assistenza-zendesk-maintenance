@@ -4,7 +4,7 @@ import os
 from datetime import datetime, timedelta
 
 APP_NAME = "AS-DynApp"
-BUILD_NUMBER = "0045"
+BUILD_NUMBER = "0047"
 APP_VERSION = "2.1"
 EMPTY = "N/A"
 READY = "--------------------------\nREADY"

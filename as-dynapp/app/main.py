@@ -117,6 +117,15 @@ class App:
             pass
         self.root.after(1000, self.sync_output)  # next check in 1s
 
+    def update_token(self):
+        cm = CredentialManager()
+        dialog = LoginDialog(self.root)
+        if dialog.result and dialog.result["password"]:
+            bearer = dialog.result["password"]
+            if bool(bearer):
+                cm.set_credentials("as-zd-extractor", "zdpy.client", bearer)
+                self.zd.set_bearer(bearer)
+
     def start(self):
         base_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -139,6 +148,16 @@ class App:
         default_font = tkfont.nametofont("TkDefaultFont")
         new_font_size = int(default_font.cget("size") * 1.3)
         default_font.configure(size=new_font_size)
+
+        # ----- File menu -----
+
+        menu_bar = tk.Menu(self.root)
+        file_menu = tk.Menu(menu_bar, tearoff=0)
+        file_menu.add_command(
+            label="Update Zendesk Token...", command=lambda: self.update_token()
+        )
+        menu_bar.add_cascade(label="File", menu=file_menu)
+        self.root.config(menu=menu_bar)
 
         # ----- Main section -----
         main_frame = tk.Frame(self.root)
