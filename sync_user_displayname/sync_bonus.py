@@ -23,7 +23,7 @@ def make_request(url: str):
 
 def update_is_needed(s1: str, s2: str) -> bool:
     similarity_score = SequenceMatcher(None, s1.casefold(), s2.casefold()).ratio()
-    return not (similarity_score > 0.7)
+    return not (similarity_score > 0.5)
 
 
 #########

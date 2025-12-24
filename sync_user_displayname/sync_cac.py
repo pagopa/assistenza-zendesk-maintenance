@@ -10,7 +10,7 @@ ZD_USER = os.getenv("Z_USER")
 API_TOKEN = os.getenv("Z_API_TOKEN")
 
 headers = {"content-type": "application/json"}
-ORG = "_users_hc_selfcare"
+ORG = "_users_hc_cac"
 
 
 def make_request(url: str):
