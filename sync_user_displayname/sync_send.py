@@ -21,6 +21,14 @@ def make_request(url: str):
     return response.json()
 
 
+def check_export_rate_limit():
+    global export_rate_limit_count
+    if export_rate_limit_count == 100:
+        print("!!! reached export rate limit (100 reqs per minute) --> delaying 60s...")
+        time.sleep(60)
+        export_rate_limit_count = 0
+
+
 def update_is_needed(s1: str, s2: str) -> bool:
     similarity_score = SequenceMatcher(None, s1.casefold(), s2.casefold()).ratio()
     return not (similarity_score > 0.5)
@@ -44,6 +52,7 @@ search_url = "https://pagopa.zendesk.com/api/v2/search/export?" + urlencode(
 # Fetch the initial page of data
 data = make_request(search_url)
 
+export_rate_limit_count = 1
 results_count = 0
 updated_count = 0
 
@@ -79,8 +88,10 @@ while search_url:
     if data["meta"]["has_more"]:
         search_url = data["links"]["next"]
         data = make_request(search_url)
+        export_rate_limit_count += 1
     else:
         search_url = ""
 
 print("# Total users found: " + str(results_count))
 print(" of which: " + str(updated_count) + " updated.")
+time.sleep(60)
