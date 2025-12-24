@@ -10,7 +10,7 @@ NOTA - Il modulo launcher.py non fa parte dell'applicazione distribuita dinamica
 
 ## sync_user_displayname
 
-Uno script python schedulato 1 volta al giorno (0:15 AM [UTC]) per l'allineamento delle etichette degli utenti finali (display names) con la porzione sinistra delle rispettive email. Il display name originario viene preservato solo se il similarity score (tra display name attuale e email) supera il 70%.
+Uno script python schedulato 1 volta al giorno (0:15 AM [UTC]) per l'allineamento delle etichette degli utenti finali (display names) con la porzione sinistra delle rispettive email. Il display name originario viene preservato solo se il similarity score (tra display name attuale e email) supera il 50%.
 
 ## soft_bulk_delete (DEPRECATED)
 

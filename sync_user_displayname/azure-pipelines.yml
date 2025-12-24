@@ -37,7 +37,7 @@ jobs:
         displayName: "Install dependencies"
 
       - task: PythonScript@0
-        displayName: Synchronize users display name
+        displayName: Synchronize users display name (selfcare)
         env:
           Z_USER: $(zendesk.user)
           Z_API_TOKEN: $(zendesk.token)
@@ -46,7 +46,7 @@ jobs:
           scriptPath: "$(working-dir)/sync_selfcare.py"
 
       - task: PythonScript@0
-        displayName: Synchronize users display name
+        displayName: Synchronize users display name (send)
         env:
           Z_USER: $(zendesk.user)
           Z_API_TOKEN: $(zendesk.token)
@@ -55,7 +55,16 @@ jobs:
           scriptPath: "$(working-dir)/sync_send.py"
 
       - task: PythonScript@0
-        displayName: Synchronize users display name
+        displayName: Synchronize users display name (cac)
+        env:
+          Z_USER: $(zendesk.user)
+          Z_API_TOKEN: $(zendesk.token)
+        inputs:
+          scriptSource: "filePath"
+          scriptPath: "$(working-dir)/sync_cac.py"
+
+      - task: PythonScript@0
+        displayName: Synchronize users display name (bonus)
         env:
           Z_USER: $(zendesk.user)
           Z_API_TOKEN: $(zendesk.token)
