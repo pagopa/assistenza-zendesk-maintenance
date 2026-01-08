@@ -87,6 +87,7 @@ while search_url:
 
     if data["meta"]["has_more"]:
         search_url = data["links"]["next"]
+        check_export_rate_limit()
         data = make_request(search_url)
         export_rate_limit_count += 1
     else:
