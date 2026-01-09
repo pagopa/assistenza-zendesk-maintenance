@@ -1,23 +1,18 @@
 import json
 import os
+import sys
 import time
 from difflib import SequenceMatcher
 from urllib.parse import urlencode
 
 import requests
 
-ZD_USER = os.getenv("Z_USER")
-API_TOKEN = os.getenv("Z_API_TOKEN")
-
-headers = {"content-type": "application/json"}
-ORG = "_users_hc_send"
-
 
 def make_request(url: str):
     response = requests.get(url, auth=(ZD_USER, API_TOKEN))
     if response.status_code != 200:
         print("ERR " + str(response.status_code) + " " + response.reason)
-        exit(1)
+        sys.exit(1)
     return response.json()
 
 
@@ -38,8 +33,18 @@ def update_is_needed(s1: str, s2: str) -> bool:
 # ENTRY #
 #########
 
+if len(sys.argv) < 2:
+    print("Usage: python sync_user_displayname.py <org-name>")
+    sys.exit(1)
+
+ZD_USER = os.getenv("Z_USER")
+API_TOKEN = os.getenv("Z_API_TOKEN")
+headers = {"content-type": "application/json"}
+ORG = sys.argv[1]
+
 # Select end users from a specific org
 
+print("Running for users segment '" + ORG + "'")
 search_params = {
     "query": 'role:end-user organization:"' + ORG + '"',
     "page[size]": 100,
@@ -79,7 +84,7 @@ while search_url:
         )
         if response.status_code != 200:
             print("ERR " + str(response.status_code) + " " + response.reason)
-            exit(1)
+            sys.exit(1)
 
         print(" ... OK")
         updated_count += 1
@@ -93,6 +98,6 @@ while search_url:
     else:
         search_url = ""
 
-print("# Total users found: " + str(results_count))
+print("# Total items found: " + str(results_count))
 print(" of which: " + str(updated_count) + " updated.")
 time.sleep(60)
