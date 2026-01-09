@@ -43,7 +43,8 @@ jobs:
           Z_API_TOKEN: $(zendesk.token)
         inputs:
           scriptSource: "filePath"
-          scriptPath: "$(working-dir)/sync_user_displayname.py _users_hc_selfcare"
+          scriptPath: "$(working-dir)/sync_user_displayname.py"
+          arguments: "_users_hc_selfcare"
 
       - task: PythonScript@0
         displayName: Synchronize users display name (send)
@@ -52,7 +53,8 @@ jobs:
           Z_API_TOKEN: $(zendesk.token)
         inputs:
           scriptSource: "filePath"
-          scriptPath: "$(working-dir)/sync_user_displayname.py _users_hc_send"
+          scriptPath: "$(working-dir)/sync_user_displayname.py"
+          arguments: "_users_hc_send"
 
       - task: PythonScript@0
         displayName: Synchronize users display name (cac)
@@ -61,7 +63,8 @@ jobs:
           Z_API_TOKEN: $(zendesk.token)
         inputs:
           scriptSource: "filePath"
-          scriptPath: "$(working-dir)/sync_user_displayname.py _users_hc_cac"
+          scriptPath: "$(working-dir)/sync_user_displayname.py"
+          arguments: "_users_hc_cac"
 
       - task: PythonScript@0
         displayName: Synchronize users display name (bonus)
@@ -70,7 +73,8 @@ jobs:
           Z_API_TOKEN: $(zendesk.token)
         inputs:
           scriptSource: "filePath"
-          scriptPath: "$(working-dir)/sync_user_displayname.py _users_hc_bonus"
+          scriptPath: "$(working-dir)/sync_user_displayname.py"
+          arguments: "_users_hc_bonus"
 
       - task: PythonScript@0
         displayName: Sanitize users aux data
