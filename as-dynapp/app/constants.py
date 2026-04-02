@@ -4,7 +4,7 @@ import os
 from datetime import datetime, timedelta
 
 APP_NAME = "AS-DynApp"
-BUILD_NUMBER = "0047"
+BUILD_NUMBER = "0048"
 APP_VERSION = "2.1"
 EMPTY = "N/A"
 READY = "--------------------------\nREADY"
@@ -54,8 +54,22 @@ VALUES_GROUP = [
     "",
 ]
 
-LABELS_TAG = ["BOpagoPA > PSP > Produzione > SCT storno", "custom..."]
-VALUES_TAG = ["tags:bo_pagopa_psp_prod_sct_storno", ""]
+LABELS_TAG = [
+    "Attualmente scalati a PSP (D+5)",
+    "Attualmente scalati a PSP (D+10)",
+    "Attualmente scalati a PSP (D+15)",
+    "Categorizzati: BOpagoPA > PSP > Produzione",
+    "Categorizzati: BOpagoPA > PSP > Produzione > SCT storno",
+    "custom tags...",
+]
+VALUES_TAG = [
+    'tags:"causa_sospensione_psp d5"',
+    'tags:"causa_sospensione_psp d10"',
+    'tags:"causa_sospensione_psp d15"',
+    "tags:bo_pagopa_psp_produzione",
+    "tags:bo_pagopa_psp_prod_sct_storno",
+    "",
+]
 
 LABELS_TIMERANGE = [
     "ultimi 7 gg",
