@@ -39,8 +39,11 @@ jobs:
       - task: PythonScript@0
         displayName: Synchronize users display name (selfcare)
         env:
-          Z_USER: $(zendesk.user)
-          Z_API_TOKEN: $(zendesk.token)
+          BTOK_URL: $(zendesk.btokurl)
+          CUSTOM_ZD_CODE: $(zendesk.zdcode)
+          CLIENT_ID: $(zendesk.clientid)
+          CLIENT_SECRET: $(zendesk.clientscrt)
+          CLIENT_SCOPE: $(zendesk.scope)
         inputs:
           scriptSource: "filePath"
           scriptPath: "$(working-dir)/sync_user_displayname.py"
@@ -49,8 +52,11 @@ jobs:
       - task: PythonScript@0
         displayName: Synchronize users display name (send)
         env:
-          Z_USER: $(zendesk.user)
-          Z_API_TOKEN: $(zendesk.token)
+          BTOK_URL: $(zendesk.btokurl)
+          CUSTOM_ZD_CODE: $(zendesk.zdcode)
+          CLIENT_ID: $(zendesk.clientid)
+          CLIENT_SECRET: $(zendesk.clientscrt)
+          CLIENT_SCOPE: $(zendesk.scope)
         inputs:
           scriptSource: "filePath"
           scriptPath: "$(working-dir)/sync_user_displayname.py"
@@ -59,28 +65,24 @@ jobs:
       - task: PythonScript@0
         displayName: Synchronize users display name (cac)
         env:
-          Z_USER: $(zendesk.user)
-          Z_API_TOKEN: $(zendesk.token)
+          BTOK_URL: $(zendesk.btokurl)
+          CUSTOM_ZD_CODE: $(zendesk.zdcode)
+          CLIENT_ID: $(zendesk.clientid)
+          CLIENT_SECRET: $(zendesk.clientscrt)
+          CLIENT_SCOPE: $(zendesk.scope)
         inputs:
           scriptSource: "filePath"
           scriptPath: "$(working-dir)/sync_user_displayname.py"
           arguments: "_users_hc_cac"
 
       - task: PythonScript@0
-        displayName: Synchronize users display name (bonus)
-        env:
-          Z_USER: $(zendesk.user)
-          Z_API_TOKEN: $(zendesk.token)
-        inputs:
-          scriptSource: "filePath"
-          scriptPath: "$(working-dir)/sync_user_displayname.py"
-          arguments: "_users_hc_bonus"
-
-      - task: PythonScript@0
         displayName: Sanitize users aux data
         env:
-          Z_USER: $(zendesk.user)
-          Z_API_TOKEN: $(zendesk.token)
+          BTOK_URL: $(zendesk.btokurl)
+          CUSTOM_ZD_CODE: $(zendesk.zdcode)
+          CLIENT_ID: $(zendesk.clientid)
+          CLIENT_SECRET: $(zendesk.clientscrt)
+          CLIENT_SCOPE: $(zendesk.scope)
         inputs:
           scriptSource: "filePath"
           scriptPath: "$(working-dir)/cleanup_users_auxdata.py"

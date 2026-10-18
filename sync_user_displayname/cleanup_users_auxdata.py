@@ -5,8 +5,11 @@ from urllib.parse import urlencode
 
 import requests
 
-ZD_USER = os.getenv("Z_USER")
-API_TOKEN = os.getenv("Z_API_TOKEN")
+BTOK_URL = os.getenv("BTOK_URL")
+CUSTOM_ZD_CODE = os.getenv("CUSTOM_ZD_CODE")
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+CLIENT_SCOPE = os.getenv("CLIENT_SCOPE")
 
 
 def chunks(lst, n):
@@ -15,12 +18,12 @@ def chunks(lst, n):
         yield lst[i : i + n]
 
 
-def make_request_get(url: str):
-    headers = {"Content-Type": "application/json"}
-    response = requests.get(url, auth=(ZD_USER, API_TOKEN), headers=headers)
+def make_request_get(url: str, headers: dict):
+    response = requests.get(url, headers=headers)
     if response.status_code != 200:
-        print("ERR " + str(response.status_code) + " " + response.reason)
-        exit(1)
+        raise Exception(
+            f"ERROR: {response.status_code}/{response.text}/{response.reason}"
+        )
     return response.json()
 
 
@@ -42,15 +45,36 @@ def check_job_rate_limit():
 
 # ENTRY
 
+# Step 0: Get an access token
+
+response = requests.post(
+    BTOK_URL,
+    headers={"Custom-Zendesk-Code": CUSTOM_ZD_CODE},
+    json={
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET,
+        "scope": CLIENT_SCOPE,
+        "expires_in": 3600,
+    },
+)
+if response.status_code != 200:
+    raise Exception(
+        f"Failed to get access token: {response.status_code}/{response.text}/{response.reason}"
+    )
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {response.text}",
+}
+
+# Step 1: Query with filter
+
 query = "aux_data:* role:end-user"
 request_url = "https://pagopa.zendesk.com/api/v2/search/export.json?" + urlencode(
     {"filter[type]": "user", "page[size]": 100, "query": query}
 )
 
-# Step 1: Query with filter
-
 # Fetch the initial page of data
-data = make_request_get(request_url)
+data = make_request_get(request_url, headers)
 export_rate_limit_count = 1
 users_count = 0
 all_users = []
@@ -65,7 +89,7 @@ while request_url:
     if data["meta"]["has_more"]:
         request_url = data["links"]["next"]
         check_export_rate_limit()
-        data = make_request_get(request_url)
+        data = make_request_get(request_url, headers)
         export_rate_limit_count += 1
     else:
         request_url = ""
@@ -75,7 +99,6 @@ print("\nTotal users to be updated: " + str(users_count))
 # Step 2: Bulk update
 
 job_rate_limit_count = 0
-headers = {"Content-Type": "application/json"}
 
 for users in list(chunks(all_users, 100)):
 
@@ -91,9 +114,7 @@ for users in list(chunks(all_users, 100)):
     json_data = {"user": {"user_fields": {"aux_data": None, "log_data": None}}}
     payload = json.dumps(json_data)
 
-    response = requests.put(
-        update_many_url, data=payload, auth=(ZD_USER, API_TOKEN), headers=headers
-    )
+    response = requests.put(update_many_url, data=payload, headers=headers)
     resp_data = response.json()
     print("\nJob issued: " + update_many_url)
     print("*** " + resp_data["job_status"]["url"])
