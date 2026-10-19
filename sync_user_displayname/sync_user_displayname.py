@@ -53,7 +53,7 @@ response = requests.post(
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET,
         "scope": CLIENT_SCOPE,
-        "expires_in": 3600,
+        "expires_in": 21600,  # 6 hours in seconds
     },
 )
 if response.status_code != 200:
