@@ -18,7 +18,7 @@ def make_request_get(url: str, headers: dict):
         raise Exception(
             f"ERROR: {response.status_code}/{response.text}/{response.reason}"
         )
-    return response.json()
+    return response
 
 
 def make_request_post(url: str, payload: dict, headers: dict):
