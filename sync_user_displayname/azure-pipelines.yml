@@ -86,3 +86,29 @@ jobs:
         inputs:
           scriptSource: "filePath"
           scriptPath: "$(working-dir)/cleanup_users_auxdata.py"
+
+      - task: PythonScript@0
+        displayName: Sanitize legacy client (360003352638)
+        env:
+          BTOK_URL: $(zendesk.btokurl)
+          CUSTOM_ZD_CODE: $(zendesk.zdcode)
+          CLIENT_ID: $(zendesk.clientid)
+          CLIENT_SECRET: $(zendesk.clientscrt)
+          CLIENT_SCOPE: $(zendesk.scope)
+        inputs:
+          scriptSource: "filePath"
+          scriptPath: "$(working-dir)/cleanup_legacy_client.py"
+          arguments: "360003352638"
+
+      - task: PythonScript@0
+        displayName: Sanitize legacy client (360003354217)
+        env:
+          BTOK_URL: $(zendesk.btokurl)
+          CUSTOM_ZD_CODE: $(zendesk.zdcode)
+          CLIENT_ID: $(zendesk.clientid)
+          CLIENT_SECRET: $(zendesk.clientscrt)
+          CLIENT_SCOPE: $(zendesk.scope)
+        inputs:
+          scriptSource: "filePath"
+          scriptPath: "$(working-dir)/cleanup_legacy_client.py"
+          arguments: "360003354217"
